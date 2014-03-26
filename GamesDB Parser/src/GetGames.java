@@ -1,73 +1,68 @@
-/**
- * 
- */
-
 import java.net.*;
-import java.util.Date;
-import java.util.Set;
 
 import javax.xml.parsers.*;
 
 import org.w3c.dom.*;
 
-/**
- * @author Rajitha Hasith
- * 
- */
-public class XMLParser {
 
-	static long ID;
-	static String Title;
-	Set<String> Platforms;
-	Date RealeaseDate;
-	Set<String> Genres;
-	int PlayersNo;
-	String CoOP;
-	URL YoutubeLink;
-	String Publisher;
-	String Developer;
+public class GetGames {
 
-	/**
-	 * @param args
-	 */
-/*	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
+		
+		for (int i = 0; i < 10000 ; i++) {
+			Document xml = GetXML(i);
+			
+			if(GameExist(xml)){
+				
+				NodeList nl = xml.getElementsByTagName("*");
+				Node n;
+				for (int k = 0; k < nl.getLength(); k++) {
 
-		URL url = new URL("http://thegamesdb.net/api/GetGame.php?id=937");
+					n = nl.item(k);
+					PrintFile(n);
+
+				}				
+				
+				
+			}
+			
+			System.out.println();
+			System.out.println("---------------------------------------------------------------------------------------------------------------");
+			System.out.println();
+			
+			
+		}
+				
+
+	}
+	
+	private static Document GetXML(int id) throws Exception   {		
+		
+		URL url = new URL("http://thegamesdb.net/api/GetGame.php?id=" + id);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.addRequestProperty("User-Agent", "Mozilla/4.76");
-
 		
-		 * XMLInputFactory xmlif = null; try { xmlif =
-		 * XMLInputFactory.newInstance();
-		 * xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
-		 * Boolean.TRUE);
-		 * xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES,
-		 * Boolean.FALSE); // set the IS_COALESCING property to true , if
-		 * application desires // to // get whole text data as one event.
-		 * xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE); }
-		 * catch (Exception ex) { ex.printStackTrace(); }
-		 
-
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(conn.getInputStream());
 
-		NodeList nl = doc.getElementsByTagName("*");
-		Node n;
-
-		int length = nl.getLength();
-
-		if (length > 2) {
-			for (int i = 0; i < nl.getLength(); i++) {
-
-				n = nl.item(i);
-				PrintFile(n);
-
-			}
-		} else
-			System.out.println("Game doesn't exist!");
+		return doc;
+		
 	}
-*/
+	
+	private static Boolean GameExist(Document doc) {
+		NodeList nl = doc.getElementsByTagName("*");
+		
+		if(nl.getLength() > 2 || nl.item(0).getNodeName() == "Error")
+			return true;
+		else 
+			return false;		
+			
+	}
+	
+	
+	
 	public static void PrintFile(Node node) {
 
 		Node child;
@@ -247,5 +242,6 @@ public class XMLParser {
 		}
 
 	}
+	
 
 }
